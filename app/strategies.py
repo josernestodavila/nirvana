@@ -1,8 +1,7 @@
 from collections import defaultdict
-from typing import Callable
 
 
-def average_coalescing_strategy(data: list[dict[str, int]]) -> dict[str, int]:
+def average_coalesce_strategy(data: list[dict[str, int]]) -> dict[str, int]:
     coalesced_data = defaultdict(int)
     data_length = len(data)
 
@@ -12,7 +11,7 @@ def average_coalescing_strategy(data: list[dict[str, int]]) -> dict[str, int]:
     return coalesced_data
 
 
-def min_coalescing_strategy(data: list[dict[str, int]]) -> dict[str, int]:
+def min_coalesce_strategy(data: list[dict[str, int]]) -> dict[str, int]:
     coalesced_data = defaultdict(int)
 
     for key in data[0].keys():
@@ -21,7 +20,7 @@ def min_coalescing_strategy(data: list[dict[str, int]]) -> dict[str, int]:
     return coalesced_data
 
 
-def max_coalescing_strategy(data: list[dict[str, int]]) -> dict[str, int]:
+def max_coalesce_strategy(data: list[dict[str, int]]) -> dict[str, int]:
     coalesced_data = defaultdict(int)
 
     for key in data[0].keys():
@@ -30,11 +29,24 @@ def max_coalescing_strategy(data: list[dict[str, int]]) -> dict[str, int]:
     return coalesced_data
 
 
-def get_strategy(strategy: str) -> Callable[[list[dict[str, int]]], dict[str, int]]:
-    strategies_mapping = {
-        "avg": average_coalescing_strategy,
-        "min": min_coalescing_strategy,
-        "max": max_coalescing_strategy,
-    }
+STRATEGIES_MAPPING = {
+    "avg": average_coalesce_strategy,
+    "min": min_coalesce_strategy,
+    "max": max_coalesce_strategy,
+}
 
-    return strategies_mapping.get(strategy, average_coalescing_strategy)
+AVAILABLE_STRATEGIES = [key for key in STRATEGIES_MAPPING]
+
+
+def coalesce_data(data: list[dict[str, int]], strategy: str) -> dict[str, int]:
+    """
+    Coalesce `data` based on the `strategy` defined.
+
+    :param data: a list of dictionaries with the data to be coalesced.
+    :param strategy: a string representing the strategy to be used to coalesce the data.
+    :return: a dictionary with the coalesced data.
+    """
+
+    coalesce_strategy_function = STRATEGIES_MAPPING.get(strategy, average_coalesce_strategy)
+
+    return coalesce_strategy_function(data)
